@@ -66,6 +66,12 @@ class Server:
             return web.Response(status=500)
 
         addr = peername[0]
+
+        if 'X-Real-IP' in request.headers:
+            addr = request.headers['X-Real-IP']
+            import ipaddress
+            addr = ipaddress.ip_address(addr)
+
         text, code = await self.handle_request(path, addr, request.headers)
 
         return web.Response(text=text, status=code)
