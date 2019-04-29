@@ -106,7 +106,7 @@ class Server:
             headers = dict()
 
         # call to user-defined function
-        cmdlist = self.nsupdatecommands(host, ip, headers)
+        cmdlist = self.nsupdatecommands(host, ip, headers, self.associations)
 
         iter(cmdlist)  # check if the generated updatecommand is iterable
         cmd = "\n".join(cmdlist) + "\n"
