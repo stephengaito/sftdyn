@@ -38,4 +38,7 @@ setup(
         "Environment :: Console",
         "Operating System :: POSIX :: Linux"
     ],
+    install_requires=[
+        "aiohttp"
+    ],
 )
