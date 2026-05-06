@@ -12,7 +12,7 @@ from .args import parse_args
 from .util import log_setup
 
 
-VERSION = "0.9"
+VERSION = "0.10"
 
 
 def main():
@@ -33,17 +33,21 @@ def main():
 
     if args.http:
         http_server = server.Server(args.http,
-                                    args.clients,
+                                    args.get_host,
                                     associations,
-                                    args.nsupdatecommands)
+                                    args.get_ip,
+                                    args.nsupdatecommands,
+                                    nskeyfile=args.nskeyfile)
         info("starting http server at %s:%d" % args.http)
         loop.run_until_complete(http_server.listen(loop))
 
     if args.https:
         https_server = server.Server(args.https,
-                                     args.clients,
+                                     args.get_host,
                                      associations,
+                                     args.get_ip,
                                      args.nsupdatecommands,
+                                     nskeyfile=args.nskeyfile,
                                      tls=(args.cert, args.key))
         info("starting https server at %s:%d" % args.https)
         loop.run_until_complete(https_server.listen(loop))

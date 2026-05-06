@@ -26,7 +26,8 @@ def get_parser(intro):
     cmd.add_argument("-k", "--key", type=str, help="HTTPS X.509 key file")
     cmd.add_argument("-i", "--interactive", action="store_true",
                      help="launch a interactive session")
-
+    cmd.add_argument("--nskeyfile", type=str,
+                     help="optional keyfile for nsupdate")
     cmd.add_argument("-d", "--debug", action="store_true",
                      help="enable asyncio debugging")
     cmd.add_argument("-v", "--verbose", action="count", default=0,
@@ -83,8 +84,12 @@ def parse_args(intro):
         exec(cfghdl.read(), confdefs)
     vars(args).update(confdefs)
 
-    if not hasattr(args, "clients"):
-        cmd.error("config file does not declare the clients dict")
+    if not hasattr(args, "get_host"):
+        cmd.error("config file does not provide `get_host`"
+                  " function to look up client hostnames")
+
+    if not hasattr(args, "get_ip"):
+        setattr(args, 'get_ip', None)
 
     if not hasattr(args, "nsupdatecommands"):
         cmd.error("config file does not define the `nsupdatecommands` function")
@@ -115,6 +120,5 @@ def parse_args(intro):
 
         if not Path(args.key).is_absolute():
             args.key = str(conffolder / args.key)
-
 
     return args
